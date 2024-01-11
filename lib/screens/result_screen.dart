@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ResultScreen extends StatelessWidget {
+  final bool isAnswerCorrect;
   final int score;
 
-  ResultScreen({required this.score});
+  ResultScreen({required this.isAnswerCorrect, required this.score});
 
   @override
   Widget build(BuildContext context) {
