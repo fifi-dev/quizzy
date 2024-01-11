@@ -4,36 +4,54 @@ import 'package:quizzy/models/question.dart';
 import 'result_screen.dart';
 
 class QuestionScreen extends StatefulWidget {
-  final Question question;
-
-  QuestionScreen({required this.question});
+  final List<Question> questions;
+  QuestionScreen({required this.questions});
 
   @override
   _QuestionScreenState createState() => _QuestionScreenState();
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
-  // Déclarez la variable selectedAnswer
+  int currentIndex = 0;
+  int score = 0;
   Answer? selectedAnswer;
+
+  void goToNextQuestion() {
+    setState(() {
+      if (currentIndex < widget.questions.length - 1) {
+        currentIndex++;
+      } else {
+        // Affichez le résultat final si toutes les questions ont été répondues
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultScreen(score: score),
+          ),
+        );
+      }
+      // Réinitialisez la réponse sélectionnée pour la nouvelle question
+      selectedAnswer = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Question'),
+        title: Text('Question ${currentIndex + 1}'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              widget.question.text,
+              widget.questions[currentIndex].text,
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
-            // Afficher les options de réponse ici
+            // Affichez les options de réponse ici
             Column(
-              children: widget.question.answers.map((answer) {
+              children: widget.questions[currentIndex].answers.map((answer) {
                 return RadioListTile<Answer>(
                   title: Text(answer.text),
                   value: answer,
@@ -49,15 +67,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ElevatedButton(
               onPressed: () {
                 if (selectedAnswer != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ResultScreen(
-                        isAnswerCorrect: selectedAnswer!.isCorrect,
-                        score: 100, // Remplacez ceci par le score réel de votre application
-                      ),
-                    ),
-                  );
+                  // Évaluez la réponse et mettez à jour le score
+                  if (selectedAnswer!.isCorrect) {
+                    score += 10; // Ajoutez le score en fonction de votre logique
+                  }
+                  goToNextQuestion(); // Passez à la prochaine question
                 }
               },
               child: Text('Valider la Réponse'),

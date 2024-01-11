@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ResultScreen extends StatelessWidget {
-  final bool isAnswerCorrect;
   final int score;
 
-  ResultScreen({required this.isAnswerCorrect, required this.score});
+  ResultScreen({required this.score});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,8 @@ class ResultScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Naviguer vers l'écran de bienvenue ou réinitialiser le quiz
+                // Redémarrez le quiz ou effectuez toute autre action
+                Navigator.pop(context); // Revenez à l'écran précédent
               },
               child: Text('Recommencer le Quiz'),
             ),
