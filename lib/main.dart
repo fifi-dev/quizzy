@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:quizzy/models/answer.dart';
 import 'package:quizzy/screens/welcome_screen.dart';
-import 'package:quizzy/models/question.dart'; // Assurez-vous d'importer correctement le modèle de question
+import 'package:quizzy/models/question.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Créez une liste de questions (remplacez ceci par votre propre liste)
     List<Question> questions = [
       Question(
         text: 'Quelle est la capitale de la France?',
@@ -28,11 +27,32 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Color(0xFF040404),
+        colorScheme: ColorScheme.dark(
+          primary: Color(0xFF5585FF), // Titres en bleu
+          onPrimary: Colors.white, // Textes en blanc
+          background: Color(0xFF040404), // Fond sombre
+          onBackground: Colors.white, // Textes en blanc
+          surface: Colors.white, // Surface (peut être ajusté selon les besoins)
+          onSurface: Colors.white, // Texte sur la surface
+        ),
+        hoverColor: Color(0xFF5585FF),
+        textTheme: TextTheme(
+          bodyText1: TextStyle(color: Colors.white), // Texte du corps
+          bodyText2: TextStyle(color: Colors.white), // Texte du corps
+          headline6: TextStyle(color: Color(0xFF5585FF)), // Titres en bleu
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white, // Fond blanc des boutons
+            onPrimary: const Color(0xFF5585FF), // Texte en bleu des boutons
+            onSurface: const Color(0xFF5585FF), // Couleur au survol des boutons
+          ),
+        ),
       ),
-      home: WelcomeScreen(questions: questions), // Passez la liste de questions à WelcomeScreen
+      
+      home: WelcomeScreen(questions: questions),
     );
   }
 }

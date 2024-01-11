@@ -1,7 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:quizzy/models/answer.dart';
+import 'package:quizzy/screens/result_screen.dart';
 import 'package:quizzy/models/question.dart';
-import 'result_screen.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Question> questions = [
+      Question(
+        text: 'Quelle est la capitale de la France?',
+        answers: [
+          Answer(text: 'Berlin', isCorrect: false),
+          Answer(text: 'Londres', isCorrect: false),
+          Answer(text: 'Paris', isCorrect: true),
+          Answer(text: 'Madrid', isCorrect: false),
+        ],
+      ),
+      // Ajoutez d'autres questions ici...
+    ];
+
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Color(0xFF040404),
+        colorScheme: ColorScheme.dark(
+          primary: Color(0xFF5585FF), // Titres en bleu
+          onPrimary: Colors.white, // Textes en blanc
+          background: Color(0xFF040404), // Fond sombre
+          onBackground: Colors.white, // Textes en blanc
+          surface: Colors.white, // Surface (peut être ajusté selon les besoins)
+          onSurface: Color(0xFF5585FF), // Texte sur la surface
+        ),
+        hoverColor: Color(0xFF5585FF).withOpacity(0.1),
+        textTheme: TextTheme(
+          bodyText1: TextStyle(color: Colors.white), // Texte du corps
+          bodyText2: TextStyle(color: Colors.white), // Texte du corps
+          headline6: TextStyle(color: Color(0xFF5585FF)), // Titres en bleu
+        ),
+      ),
+      home: QuestionScreen(questions: questions),
+    );
+  }
+}
 
 class QuestionScreen extends StatefulWidget {
   final List<Question> questions;
@@ -50,15 +96,28 @@ class _QuestionScreenState extends State<QuestionScreen> {
             SizedBox(height: 20),
             Column(
               children: widget.questions[currentIndex].answers.map((answer) {
-                return RadioListTile<Answer>(
-                  title: Text(answer.text),
-                  value: answer,
-                  groupValue: selectedAnswer,
-                  onChanged: (Answer? value) {
+                return GestureDetector(
+                  onTap: () {
                     setState(() {
-                      selectedAnswer = value;
+                      selectedAnswer = answer;
                     });
                   },
+                  child: Container(
+                    margin: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: selectedAnswer == answer ? Color(0xFF5585FF) : null,
+                      borderRadius: BorderRadius.circular(8.0),
+                      // Autres styles de décoration au besoin
+                    ),
+                    child: Text(
+                      answer.text,
+                      style: TextStyle(
+                        color: Colors.white,
+                        // Autres styles de texte au besoin
+                      ),
+                    ),
+                  ),
                 );
               }).toList(),
             ),
