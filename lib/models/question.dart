@@ -1,3 +1,5 @@
+import 'answer.dart';
+
 class Question {
   String text;
   List<Answer> answers;
