@@ -21,7 +21,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
       if (currentIndex < widget.questions.length - 1) {
         currentIndex++;
       } else {
-        // Affichez le résultat final si toutes les questions ont été répondues
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -29,7 +28,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
           ),
         );
       }
-      // Réinitialisez la réponse sélectionnée pour la nouvelle question
       selectedAnswer = null;
     });
   }
@@ -49,7 +47,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
-            // Affichez les options de réponse ici
+            SizedBox(height: 20),
             Column(
               children: widget.questions[currentIndex].answers.map((answer) {
                 return RadioListTile<Answer>(
@@ -64,14 +62,39 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 );
               }).toList(),
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 if (selectedAnswer != null) {
                   // Évaluez la réponse et mettez à jour le score
-                  if (selectedAnswer!.isCorrect) {
-                    score += 10; // Ajoutez le score en fonction de votre logique
-                  }
-                  goToNextQuestion(); // Passez à la prochaine question
+                  bool isCorrect = selectedAnswer!.isCorrect;
+                  setState(() {
+                    if (isCorrect) {
+                      score += 10;
+                    }
+                  });
+
+                  // Affichez le feedback immédiat
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(isCorrect ? 'Correct!' : 'Incorrect!'),
+                        content: Text(isCorrect
+                            ? 'Bonne réponse! Vous avez gagné 10 points.'
+                            : 'Mauvaise réponse. Aucun point n\'a été gagné.'),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              goToNextQuestion();
+                            },
+                            child: Text('Continuer'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
               },
               child: Text('Valider la Réponse'),
