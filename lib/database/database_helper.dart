@@ -8,7 +8,7 @@ import 'package:quizzy/models/question.dart';
 import 'package:quizzy/models/answer.dart';
 
 class DatabaseHelper {
-  late Database _database;
+  Database? _database; // Change late Database to Database?
 
   DatabaseHelper() {
     initDatabase();
@@ -33,7 +33,7 @@ class DatabaseHelper {
         );
       },
     );
-    
+
     // Check if it's the first launch and download questions
     await checkFirstLaunch();
   }
@@ -172,11 +172,11 @@ class DatabaseHelper {
   }
 
   Future<Database> get database async {
-      if (_database.isOpen) {
-        return _database;
-      } else {
-        await initDatabase();
-        return _database;
-      }
+    if (_database != null && _database!.isOpen) {
+      return _database!;
+    } else {
+      await initDatabase();
+      return _database!;
     }
+  }
 }
