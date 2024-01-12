@@ -93,6 +93,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 64),
+            Image.asset(
+              'assets/images/quizzy_logo.png',
+              height: 80, 
+              width: 80, 
+            ),
+            SizedBox(height: 32),
             Text(
               widget.questions[currentIndex].text,
               style: TextStyle(fontSize: 20),

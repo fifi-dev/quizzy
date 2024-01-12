@@ -172,11 +172,11 @@ class DatabaseHelper {
   }
 
   Future<Database> get database async {
-    if (_database.isOpen) {
-      return _database;
-    } else {
-      await initDatabase();
-      return _database;
+      if (_database.isOpen) {
+        return _database;
+      } else {
+        await initDatabase();
+        return _database;
+      }
     }
-  }
 }

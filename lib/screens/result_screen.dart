@@ -20,6 +20,12 @@ class ResultScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/images/quizzy_logo.png',
+              height: 80, 
+              width: 80, 
+            ),
+            SizedBox(height: 32),
             Text(
               'Votre score : $score',
               style: TextStyle(fontSize: 20),

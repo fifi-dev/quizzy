@@ -20,14 +20,14 @@ class WelcomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
           Image.asset(
-            'assets/images/quizzy_logo.png', // Replace with the actual path to your image
-            height: 80, // Adjust the height as needed
-            width: 80, // Adjust the width as needed
+            'assets/images/quizzy_logo.png',
+            height: 80, 
+            width: 80, 
           ),
-          SizedBox(height: 8), // Add some spacing between the image and the title
+          SizedBox(height: 32),
             Text(
               'Welcome to the Quizzy app!',
               style: TextStyle(fontSize: 20),
