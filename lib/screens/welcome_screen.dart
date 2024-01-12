@@ -22,6 +22,7 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+          SizedBox(height: 150),
           Image.asset(
             'assets/images/quizzy_logo.png',
             height: 80, 

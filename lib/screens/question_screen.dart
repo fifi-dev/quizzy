@@ -63,6 +63,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   Answer? selectedAnswer;
 
   void goToNextQuestion() {
+    print('Moving to the next question...');
     setState(() {
       if (currentIndex < widget.questions.length - 1) {
         currentIndex++;
@@ -91,9 +92,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 64),
+            SizedBox(height: 32),
             Image.asset(
               'assets/images/quizzy_logo.png',
               height: 80, 

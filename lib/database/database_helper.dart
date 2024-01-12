@@ -8,7 +8,7 @@ import 'package:quizzy/models/question.dart';
 import 'package:quizzy/models/answer.dart';
 
 class DatabaseHelper {
-  Database? _database; // Change late Database to Database?
+  late Database? _database;
 
   DatabaseHelper() {
     initDatabase();
@@ -73,18 +73,34 @@ class DatabaseHelper {
 
   Future<List<Question>> getLocalQuestions() async {
     final db = await database;
-    final List<Map<String, dynamic>> questionsData = await db.query('questions');
-    return questionsData.map((questionData) {
-      return Question(
-        text: questionData['text'],
-        answers: (jsonDecode(questionData['answers']) as List<dynamic>).map((answerData) {
-          return Answer(
-            text: answerData['text'],
-            isCorrect: answerData['isCorrect'],
-          );
-        }).toList(),
-      );
-    }).toList();
+
+    if (db == null) {
+      try {
+        return await fetchQuestions(); // Fetch questions from an external source
+      } catch (e) {
+        print('Error fetching questions: $e');
+        return []; // Return an empty list if fetching fails
+      }
+    }
+
+    final List<Map<String, dynamic>>? questionsData = await db.query('questions');
+
+    if (questionsData != null) {
+      return questionsData.map((questionData) {
+        return Question(
+          text: questionData['text'],
+          answers: (jsonDecode(questionData['answers']) as List<dynamic>).map((answerData) {
+            return Answer(
+              text: answerData['text'],
+              isCorrect: answerData['isCorrect'],
+            );
+          }).toList(),
+        );
+      }).toList();
+    } else {
+      // Handle the case when db is null
+      return [];
+    }
   }
 
   Future<List<Question>> fetchQuestions() async {
@@ -115,6 +131,14 @@ class DatabaseHelper {
 
   Future<void> insertQuestions(List<Question> questions) async {
     final db = await database;
+
+    if (db == null) {
+      print('Database is null. Cannot insert questions.');
+      return;
+    }
+
+    // Clear existing questions before inserting new ones
+    await db.delete('questions');
 
     for (var question in questions) {
       await db.insert(
@@ -154,6 +178,16 @@ class DatabaseHelper {
 
   Future<List<Question>> getQuestions() async {
     final db = await database;
+
+    if (db == null) {
+      try {
+        return await fetchQuestions(); // Fetch questions from an external source
+      } catch (e) {
+        print('Error fetching questions: $e');
+        return []; // Return an empty list if fetching fails
+      }
+    }
+
     final List<Map<String, dynamic>> maps = await db.query('questions');
 
     return List.generate(maps.length, (i) {
@@ -171,12 +205,12 @@ class DatabaseHelper {
     });
   }
 
-  Future<Database> get database async {
+  Future<Database?> get database async {
     if (_database != null && _database!.isOpen) {
       return _database!;
     } else {
       await initDatabase();
-      return _database!;
+      return _database;
     }
   }
 }
