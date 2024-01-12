@@ -1,7 +1,7 @@
 import 'answer.dart';
 
 class Question {
-  String text;
+  String text; 
   List<Answer> answers;
 
   Question({required this.text, required this.answers});
