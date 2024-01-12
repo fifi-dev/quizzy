@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzy/models/answer.dart';
 import 'package:quizzy/screens/welcome_screen.dart';
 import 'package:quizzy/models/question.dart';
+import 'package:quizzy/database/database_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,6 @@ class MyApp extends StatelessWidget {
           Answer(text: 'Madrid', isCorrect: false),
         ],
       ),
-      // Ajoutez d'autres questions ici...
     ];
 
     return MaterialApp(
@@ -51,8 +51,25 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      
-      home: WelcomeScreen(questions: questions),
+      home: FutureBuilder<List<Question>>(
+        // Utilisez FutureBuilder pour obtenir les questions depuis la base de données
+        future: DatabaseHelper().checkLastUpdateAndFetch(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Affichez une indication de chargement si les données ne sont pas encore disponibles
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            // Affichez une erreur si la récupération des données échoue
+            return Text('Erreur: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            // Si les données sont disponibles, passez-les à l'écran d'accueil
+            return WelcomeScreen(questions: snapshot.data!);
+          } else {
+            // Sinon, affichez un message par défaut
+            return Text('Aucune question trouvée');
+          }
+        },
+      ),
     );
   }
 }

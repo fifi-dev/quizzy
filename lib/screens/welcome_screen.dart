@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizzy/screens/question_screen.dart';
-import 'package:quizzy/models/question.dart'; // Assurez-vous d'importer correctement le modèle de question
+import 'package:quizzy/models/question.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  final List<Question> questions; // Ajoutez une liste de questions
+  final List<Question> questions;
 
   WelcomeScreen({required this.questions});
 
@@ -11,15 +11,32 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quizzy'),
+        backgroundColor: Colors.black,
+        title: Text(
+          'Quizzy',
+          style: TextStyle(color: Colors.white),
+        ),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+          Image.asset(
+            'assets/images/quizzy_logo.png', // Replace with the actual path to your image
+            height: 80, // Adjust the height as needed
+            width: 80, // Adjust the width as needed
+          ),
+          SizedBox(height: 8), // Add some spacing between the image and the title
             Text(
-              'Bienvenue dans l\'application Quizzy !',
+              'Welcome to the Quizzy app!',
               style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Test your knowledge with exciting questions.',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
@@ -29,12 +46,12 @@ class WelcomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => QuestionScreen(
-                      questions: questions, // Passez la liste complète de questions
+                      questions: questions,
                     ),
                   ),
                 );
               },
-              child: Text('Démarrer'),
+              child: Text('Start'),
             ),
           ],
         ),

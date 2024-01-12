@@ -10,12 +10,10 @@ import 'package:quizzy/models/answer.dart';
 class DatabaseHelper {
   late Database _database;
 
-  // Constructor to initialize the database
   DatabaseHelper() {
     initDatabase();
   }
 
-  // Initialize the SQLite database
   Future<void> initDatabase() async {
     final path = await getDatabasesPath();
     final databasePath = join(path, 'quiz_database.db');
@@ -40,7 +38,6 @@ class DatabaseHelper {
     await checkFirstLaunch();
   }
 
-  // Check if it's the first launch, if yes, download questions and store in the database
   Future<void> checkFirstLaunch() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
@@ -49,6 +46,7 @@ class DatabaseHelper {
       var connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult == ConnectivityResult.none) {
         print('No Internet connection. Unable to download questions.');
+        await useLocalQuestionsOrShowError();
         return;
       }
 
@@ -56,13 +54,39 @@ class DatabaseHelper {
       if (questions.isNotEmpty) {
         await insertQuestions(questions);
         prefs.setString('last_update', DateTime.now().toIso8601String());
+      } else {
+        await useLocalQuestionsOrShowError();
       }
 
       prefs.setBool('first_launch', false);
     }
   }
 
-  // Fetch questions from a remote server
+  Future<void> useLocalQuestionsOrShowError() async {
+    final questions = await getLocalQuestions();
+    if (questions.isNotEmpty) {
+      print('Using local questions.');
+    } else {
+      print('No local questions available. Display an error message.');
+    }
+  }
+
+  Future<List<Question>> getLocalQuestions() async {
+    final db = await database;
+    final List<Map<String, dynamic>> questionsData = await db.query('questions');
+    return questionsData.map((questionData) {
+      return Question(
+        text: questionData['text'],
+        answers: (jsonDecode(questionData['answers']) as List<dynamic>).map((answerData) {
+          return Answer(
+            text: answerData['text'],
+            isCorrect: answerData['isCorrect'],
+          );
+        }).toList(),
+      );
+    }).toList();
+  }
+
   Future<List<Question>> fetchQuestions() async {
     final response = await http.get(
       Uri.parse('https://flutter-learning-iim.web.app/json/questions.json'),
@@ -70,7 +94,8 @@ class DatabaseHelper {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      final List<Map<String, dynamic>> questionsData = data['questions'];
+      final List<Map<String, dynamic>> questionsData =
+          List<Map<String, dynamic>>.from(data['questions']);
 
       return questionsData.map((questionData) {
         return Question(
@@ -88,7 +113,6 @@ class DatabaseHelper {
     }
   }
 
-  // Insert questions into the SQLite database
   Future<void> insertQuestions(List<Question> questions) async {
     final db = await database;
 
@@ -97,13 +121,56 @@ class DatabaseHelper {
         'questions',
         {
           'text': question.text,
-          'answers': jsonEncode(question.answers),
+          'answers': jsonEncode(question.answers.map((answer) => answer.toJson()).toList()),
         },
       );
     }
   }
-  
-  // Getter for the database, ensuring it's open
+
+  Future<List<Question>> checkLastUpdateAndFetch() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? lastUpdateString = prefs.getString('last_update');
+    DateTime? lastUpdate = lastUpdateString != null
+        ? DateTime.tryParse(lastUpdateString)
+        : null;
+
+    if (lastUpdate == null || DateTime.now().difference(lastUpdate).inMinutes > 5) {
+      var connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
+        return await getQuestions(); // No internet, return local questions
+      }
+
+      final questions = await fetchQuestions();
+      if (questions.isNotEmpty) {
+        await insertQuestions(questions);
+        prefs.setString('last_update', DateTime.now().toIso8601String());
+      }
+
+      return questions;
+    } else {
+      return await getQuestions(); // Return local questions
+    }
+  }
+
+  Future<List<Question>> getQuestions() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('questions');
+
+    return List.generate(maps.length, (i) {
+      return Question(
+        text: maps[i]['text'],
+        answers: List<Answer>.from(
+          jsonDecode(maps[i]['answers']).map((answer) {
+            return Answer(
+              text: answer['text'],
+              isCorrect: answer['isCorrect'],
+            );
+          }),
+        ),
+      );
+    });
+  }
+
   Future<Database> get database async {
     if (_database.isOpen) {
       return _database;

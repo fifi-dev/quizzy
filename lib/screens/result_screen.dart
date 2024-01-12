@@ -9,7 +9,12 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Résultat'),
+        backgroundColor: Colors.black,
+        title: Text(
+          'Résultat',
+          style: TextStyle(color: Colors.white),
+        ),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(

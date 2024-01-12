@@ -82,7 +82,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Question ${currentIndex + 1}'),
+        backgroundColor: Colors.black,
+        title: Text(
+          'Question ${currentIndex + 1}',
+          style: TextStyle(color: Colors.white),
+        ),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
