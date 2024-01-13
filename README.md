@@ -63,8 +63,6 @@ for the database:
 
 - database: Contains Dart files related to database interactions. The DatabaseHelper class handles database initialization, data fetching, and storage.
 
-- widgets: Contains reusable widgets that can be used across multiple screens. For instance, a QuizzyLogo widget might be used to display the app's logo consistently.
-
 - main.dart: Serves as the entry point of the app. It initializes the app and specifies the initial screen.
 
 ##### assets Directory
