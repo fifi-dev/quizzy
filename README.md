@@ -6,7 +6,7 @@
 
 Quizzy is a Flutter app that lets users enjoy quiz challenges and test their knowledge on various topics.
 
-🤔 How it's work ? : 
+#### 🤔 How it's work ? : 
 
 Quizzy makes quizzing a breeze! Simply dive in, answer a series of engaging questions, and watch your score soar. Challenge yourself or compete with friends to see who's the ultimate quiz champion. It's easy, fun, and the perfect way to test your knowledge. Ready to Quizzy? Let the games begin! 🌟
 
