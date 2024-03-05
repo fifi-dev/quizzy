@@ -30,42 +30,42 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Color(0xFF040404),
         colorScheme: ColorScheme.dark(
-          primary: Color(0xFF5585FF), // Titres en bleu
-          onPrimary: Colors.white, // Textes en blanc
-          background: Color(0xFF040404), // Fond sombre
-          onBackground: Colors.white, // Textes en blanc
-          surface: Colors.white, // Surface (peut être ajusté selon les besoins)
-          onSurface: Colors.white, // Texte sur la surface
+          primary: Color(0xFF5585FF), // blue titles
+          onPrimary: Colors.white, // white texte
+          background: Color(0xFF040404), // dark background
+          onBackground: Colors.white, // white text
+          surface: Colors.white, // Surface
+          onSurface: Colors.white, // surface text
         ),
         hoverColor: Color(0xFF5585FF),
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.white), // Texte du corps
-          bodyText2: TextStyle(color: Colors.white), // Texte du corps
-          headline6: TextStyle(color: Color(0xFF5585FF)), // Titres en bleu
+          bodyText1: TextStyle(color: Colors.white), 
+          bodyText2: TextStyle(color: Colors.white), 
+          headline6: TextStyle(color: Color(0xFF5585FF)),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: Colors.white, // Fond blanc des boutons
-            onPrimary: const Color(0xFF5585FF), // Texte en bleu des boutons
-            onSurface: const Color(0xFF5585FF), // Couleur au survol des boutons
+            primary: Colors.white, // buttons white background 
+            onPrimary: const Color(0xFF5585FF),
+            onSurface: const Color(0xFF5585FF), // on hover 
           ),
         ),
       ),
       home: FutureBuilder<List<Question>>(
-        // Utilisez FutureBuilder pour obtenir les questions depuis la base de données
+        // Use FutureBuilder to get questions from the database
         future: DatabaseHelper().checkLastUpdateAndFetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Affichez une indication de chargement si les données ne sont pas encore disponibles
+            // Show a loading indication if data is not yet available
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            // Affichez une erreur si la récupération des données échoue
+            // Show an error if data fetching fails
             return Text('Erreur: ${snapshot.error}');
           } else if (snapshot.hasData) {
-            // Si les données sont disponibles, passez-les à l'écran d'accueil
+            // If the data is available, pass it to the home screen
             return WelcomeScreen(questions: snapshot.data!);
           } else {
-            // Sinon, affichez un message par défaut
+            // Otherwise, show a default message
             return Text('Aucune question trouvée');
           }
         },
