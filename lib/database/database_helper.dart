@@ -76,7 +76,7 @@ class DatabaseHelper {
 
     if (db == null) {
       try {
-        return await fetchQuestions(); // Fetch questions from an external source
+        return await fetchQuestions(); // Fetch questions from an external source 
       } catch (e) {
         print('Error fetching questions: $e');
         return []; // Return an empty list if fetching fails
