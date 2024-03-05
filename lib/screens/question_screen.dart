@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
           Answer(text: 'Madrid', isCorrect: false),
         ],
       ),
-      // Ajoutez d'autres questions ici...
     ];
 
     return MaterialApp(
@@ -30,18 +29,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Color(0xFF040404),
         colorScheme: ColorScheme.dark(
-          primary: Color(0xFF5585FF), // Titres en bleu
-          onPrimary: Colors.white, // Textes en blanc
-          background: Color(0xFF040404), // Fond sombre
-          onBackground: Colors.white, // Textes en blanc
-          surface: Colors.white, // Surface (peut être ajusté selon les besoins)
-          onSurface: Color(0xFF5585FF), // Texte sur la surface
+          primary: Color(0xFF5585FF), // Blue title
+          onPrimary: Colors.white, // white text
+          background: Color(0xFF040404), // dark background
+          onBackground: Colors.white, // white text
+          surface: Colors.white, // Surface
+          onSurface: Color(0xFF5585FF), // Text on surface
         ),
         hoverColor: Color(0xFF5585FF).withOpacity(0.1),
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.white), // Texte du corps
-          bodyText2: TextStyle(color: Colors.white), // Texte du corps
-          headline6: TextStyle(color: Color(0xFF5585FF)), // Titres en bleu
+          bodyText1: TextStyle(color: Colors.white), // body text
+          bodyText2: TextStyle(color: Colors.white), // body text
+          headline6: TextStyle(color: Color(0xFF5585FF)), // blue title
         ),
       ),
       home: QuestionScreen(questions: questions),
@@ -121,13 +120,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     decoration: BoxDecoration(
                       color: selectedAnswer == answer ? Color(0xFF5585FF) : null,
                       borderRadius: BorderRadius.circular(8.0),
-                      // Autres styles de décoration au besoin
                     ),
                     child: Text(
                       answer.text,
                       style: TextStyle(
                         color: Colors.white,
-                        // Autres styles de texte au besoin
                       ),
                     ),
                   ),
@@ -138,7 +135,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ElevatedButton(
               onPressed: () {
                 if (selectedAnswer != null) {
-                  // Évaluez la réponse et mettez à jour le score
+                  // Evaluate the answer and update the score
                   bool isCorrect = selectedAnswer!.isCorrect;
                   setState(() {
                     if (isCorrect) {
@@ -146,7 +143,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     }
                   });
 
-                  // Affichez le feedback immédiat
+                  // display feedback
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
