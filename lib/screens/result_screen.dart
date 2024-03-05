@@ -34,8 +34,8 @@ class ResultScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Redémarrez le quiz ou effectuez toute autre action
-                Navigator.pop(context); // Revenez à l'écran précédent
+                // Restart the quiz or take any other action
+                Navigator.pop(context); // Return to the previous screen
               },
               child: Text('Recommencer le Quiz'),
             ),
